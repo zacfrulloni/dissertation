@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps API - Text Search</title>
+    <style>
+
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #34495e;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+             text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+            color: #7f8c8d;
+             font-size: 1.2em;
+        }
+        /* p {
+            text-align: center;
+        } */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+          input[type="text"], select, textarea {
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1em;
+             width: 100%;
+            max-width: 100%;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+         border-radius: 4px;
+            background-color: #2980b9;
+            color: white;
+         font-size: 1em;
+            cursor: pointer;
+            align-self: center;
+            max-width: 200px;
+        }
+          button:hover {
+            background-color: #3498db;
+        }
+         pre {
+             background-color: #ecf0f1;
+            padding: 10px;
+          border-radius: 4px;
+            overflow-x: auto;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .download-button {
+            display: none;
+              margin-top: 10px;
+            background-color: #27ae60;
+            padding: 10px 20px;
+        }
+        .download-button:hover {
+            background-color: #2ecc71;
+        }
+        .section {
+            margin-top: 20px;
+        }
+          .example-queries {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+        }
+         #status-message {
+            display: none;
+             margin-top: 10px;
+            color: #27ae60;
+        }
+        #progress-bar-container {
+            display: none;
+            width: 100%;
+            background-color: #bdc3c7;
+            border-radius: 4px;
+            margin-top: 10px;
+                /* border-radius: 2px;
+                margin-top: 5px; */
+        }
+         #progress-bar {
+            width: 0;
+            height: 20px;
+             background-color: #2980b9;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Facilitate Data Collection with One Query</h1>
+        
+         <div class="section">
+            <h2>Query API</h2>
+             <form id="query-form">
+                <label for="query">Enter your query (check below for a list of example queries):</label>
+                <input type="text" id="query" name="query" required>
+ 
+                <label for="model">Select Model:</label>
+                <select id="model" name="model" required>
+                    <option value="gpt-4o">GPT-4o (Fastest)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                      <option value="Claude-3.5-Sonnet">Claude-3.5-Sonnet</option>
+                </select>
+
+
+<!-- 
+                <label for="model">Select Model:</label>
+                <select id="model" name="model" required>
+                    <option value="gpt-4o">GPT-4o (Fastest)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                </select> -->
+
+                <button type="submit">Submit your query</button>
+            </form>
+        </div>
+
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div class="section">
+            <h2>Real-Time Logs</h2>
+            <pre id="real-time-log"></pre>
+        </div>
+
+        <div class="section">
+            <h2>generating python code (for developers)</h2>
+              <form id="code-form">
+                <label for="code">Generated python code:</label>
+                <textarea id="code" name="code" rows="10" required></textarea>
+                <button id="execute-code-button" type="button">Execute code</button>
+
+             </form>
+            
+        </div>
+
+        <div class="section">
+            <h2>API Endpoint</h2>
+            <p><strong>https://places.googleapis.com/v1/places:searchText</strong></p>
+            <p>This endpoint returns information about a set of places from the Google Maps API</p>
+        </div>
+
+        <div class="section">
+            <h2>Results</h2>
+            <pre id="result"></pre>
+                <!-- <pre id="test"></pre> -->
+            <button id="download-button" class="download-button">Download Results</button>
+            <p id="status-message">File is ready for download</p>
+        </div>
+
+        <div class="section example-queries">
+            <h2>Example queries</h2>
+            <ul>
+
+
+                <li>"Find restaurants in New York with a minimum rating of 4.5"</li>
+                <li>"Locate all coffee shops in San Francisco open now"</li>
+                <li>"Search for parks in Los Angeles with free entry"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        
+        document.getElementById('execute-code-button').addEventListener('click', async function () {
+        const code = document.getElementById('code').value;
+        
+        //NOTE: Progess bar::
+        const progressBarContainer = document.getElementById('progress-bar-container');
+        const progressBar = document.getElementById('progress-bar');
+        progressBarContainer.style.display = 'block';
+        progressBar.style.width = '0';
+        
+        const interval = setInterval(() => {
+            const width = parseInt(progressBar.style.width);
+            if (width < 90) {
+                progressBar.style.width = (width + 10) + '%';
+            }
+        }, 500);
+        // const interval = setInterval(() => {
+        //     const width = parseInt(progressBar.style.width);
+        //     i
+        // }, 500);
+        
+        try {
+            const response = await fetch('/api/execute_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ code: code })
+            });
+
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+            
+            const data = await response.json();
+        document.getElementById('result').textContent = data.execution_result;
+            
+             const downloadButton = document.getElementById('download-button');
+            const statusMessage = document.getElementById('status-message');
+            downloadButton.style.display = 'block';
+            statusMessage.style.display = 'block';
+        } catch (error) {
+            clearInterval(interval);
+            progressBar.style.width = '0';
+            document.getElementById('result').textContent = "error while execute the code";
+        }
+    });
+
+        const googleMapsApiKey = localStorage.getItem('googleMapsApiKey');
+        const openAiApiKey = localStorage.getItem('openAiApiKey');
+         const langChainApiKey = localStorage.getItem('langChainApiKey');
+
+        if (!googleMapsApiKey || !openAiApiKey || !langChainApiKey) {
+                window.location.href = 'credentials.html';
+        }
+
+        const eventSource = new EventSource('/api/logs');
+        
+        eventSource.onmessage = function(event) {
+            const log = document.getElementById('real-time-log');
+            log.textContent += event.data + '\n';
+            log.scrollTop = log.scrollHeight;
+        };
+    
+        document.getElementById('query-form').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.querySelector('#query-form button[type="submit"]').click();
+            }
+        });
+    
+        document.getElementById('query-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            
+            console.log("Sending request to backend...");
+            
+            const query = document.getElementById('query').value;
+            const model = document.getElementById('model').value;
+
+            const googleMapsApiKey = localStorage.getItem('googleMapsApiKey');
+           
+           
+           
+            const openAiApiKey = localStorage.getItem('openAiApiKey');
+            const langChainApiKey = localStorage.getItem('langChainApiKey');
+
+            const progressBarContainer = document.getElementById('progress-bar-container');
+            const progressBar = document.getElementById('progress-bar');
+            progressBarContainer.style.display = 'block';
+
+
+            // const progressBarContainer = document.getElementById('progress-bar-container');
+            // const progressBar = document.getElementById('progress-bar');
+            // progressBarContainer.style.display = 'block';
+            
+            progressBar.style.width = '0';
+
+            const interval = setInterval(() => {
+                const width = parseInt(progressBar.style.width);
+                if (width < 90) {
+                    progressBar.style.width = (width + 10) + '%';
+                }
+            }, 500);
+
+            const response = await fetch('/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    query: query,
+                    model: model,
+                    google_maps_api_key: googleMapsApiKey,
+                    openai_api_key: openAiApiKey,
+                    langchain_api_key: langChainApiKey
+                })
+            });
+
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+            const data = await response.json();
+            
+            console.log("data:", data);
+            
+            document.getElementById('code').value = data.generated_code;
+
+            const downloadButton = document.getElementById('download-button');
+            const statusMessage = document.getElementById('status-message');
+            
+            downloadButton.style.display = 'block';
+            statusMessage.style.display = 'block';
+
+            downloadButton.onclick = function () {
+                const blob = new Blob([data.execution_result], { type: 'text/plain' });
+                
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'results.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+        });
+    
+        document.getElementById('code-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const code = document.getElementById('code').value;
+    
+            const progressBarContainer = document.getElementById('progress-bar-container');
+            const progressBar = document.getElementById('progress-bar');
+            progressBarContainer.style.display = 'block';
+            progressBar.style.width = '0';
+    
+            // progressBarContainer = document.getElementById('progress-bar-container');
+            // progressBar.style.width = '1';
+
+            const interval = setInterval(() => {
+                const width = parseInt(progressBar.style.width);
+                if (width < 90) {
+                    progressBar.style.width = (width + 10) + '%';
+                }
+            }, 500);
+    
+            const response = await fetch('/api/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: '', model: 'gpt-4-turbo', code: code })
+            });
+    
+            clearInterval(interval);
+            progressBar.style.width = '100%';
+    
+            const data = await response.json();
+            document.getElementById('result').textContent = data.execution_result;
+    
+            const downloadButton = document.getElementById('download-button');
+            const statusMessage = document.getElementById('status-message');
+            downloadButton.style.display = 'block';
+            statusMessage.style.display = 'block';
+    
+            downloadButton.onclick = function () {
+                const blob = new Blob([data.execution_result], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'results.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+
+            // downloadButton.onclick = function () {
+            //     const blob = new Blob([data.execution_result], { type: 'text/plain' });
+            //     const url = URL.createObjectURL(blob);
+            //     const a = document.createElement('a');
+            //     a.href = url;
+
+            //     document.body.removeChild(a);
+            //     URL.revokeObjectURL(url);
+            // };
+        });
+    </script>
+    
+
+
+
+</body>
+</html>
