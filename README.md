@@ -42,12 +42,10 @@ To enable interaction with your Postman collection, you need to set up the Postm
     * Log in to your Postman account.
     * Go to the Postman API Keys section in your settings to create and obtain an API key.
     * Identify your Forked UID from your Postman workspace.
-2. Create a .env file in the root directory of your project: Create a file named .env and add the following lines, replacing the placeholders with your actual Postman API Key and Forked UID: plaintextCopy code  POSTMAN_API_KEY=your_postman_api_key_here
+2. Create a .env file in the root directory of your project: Create a file named .env and add the following lines, replacing the placeholders with your actual Postman API Key and Forked UID:  POSTMAN_API_KEY=your_postman_api_key_here
 3. FORKED_UID=your_forked_uid_here
-4.    For example: plaintextCopy code  POSTMAN_API_KEY=
-5. FORKED_UID=
-6.   
-Updating File Paths
+
+4. Updating File Paths
 When cloning the repository, you may need to update the file paths used in the code for saving results:
 1. Default file path: The code uses the following default path to save the execution results: pythonCopy code  results_file_path = '/Users/zac/Desktop/TurboAPI/results.txt'
 2.   
