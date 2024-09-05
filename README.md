@@ -71,7 +71,7 @@ Guides For obtaining API keys:
 
 3. Google Maps: https://developers.google.com/maps/documentation/javascript/get-api-key
 
-4. https://learning.postman.com/docs/developer/postman-api/authentication/
+4. Postman: https://learning.postman.com/docs/developer/postman-api/authentication/
 
 
 Acknowledgments
