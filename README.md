@@ -20,7 +20,8 @@ cd dissertation
 Install the required Python packages: Make sure you have Python installed. Run the following command to install the required packages: pip install -r requirements.txt
 
 Run the application: Start the FastAPI server: uvicorn app.main:app --reload
-     
+
+
 Access the application: Open your web browser and go to http://127.0.0.1:8000 to access the web interface.
 
 Usage
@@ -38,21 +39,31 @@ To use this application, you need API keys for Google Maps, OpenAI, and LangChai
 Enter these keys on the credentials page of the web interface to use the application.
 Configuring Postman API Key and Forked UID
 To enable interaction with your Postman collection, you need to set up the Postman API Key and Forked UID. Follow these steps:
-1. Obtain your Postman API Key and Forked UID:
+
+Obtain your Postman API Key and Forked UID:
     * Log in to your Postman account.
     * Go to the Postman API Keys section in your settings to create and obtain an API key.
     * Identify your Forked UID from your Postman workspace.
-2. Create a .env file in the root directory of your project: Create a file named .env and add the following lines, replacing the placeholders with your actual Postman API Key and Forked UID:  POSTMAN_API_KEY=your_postman_api_key_here
-3. FORKED_UID=your_forked_uid_here
 
-4. Updating File Paths
+Update the existing .env file in the root directory of your project. Replace the placeholders with your actual Postman API Key and Forked UID:
+
+POSTMAN_API_KEY=your_postman_api_key_here
+
+FORKED_UID=your_forked_uid_here
+
+Updating File Paths
+
 When cloning the repository, you may need to update the file paths used in the code for saving results:
-1. Default file path: The code uses the following default path to save the execution results: pythonCopy code  results_file_path = '/Users/zac/Desktop/TurboAPI/results.txt'
-2.   
-3. Other possible paths: Ensure to check the entire codebase for similar file paths, as there might be more instances:
-    * results_file_path = '/path/to/your/results.txt'
-4. Update the paths: Replace these paths with paths specific to your environment where you want the results to be stored. This can typically be found in files like query.py or other related modules.
+
+Default file path: The code uses the following default path to save the execution results:  results_file_path = '/Users/zac/Desktop/TurboAPI/results.txt'
+
+Other possible paths: Ensure to check the entire codebase for similar file paths, as there might be more instances:
+
+results_file_path = '/path/to/your/results.txt'
+    
+Update the paths: Replace these paths with paths specific to your environment where you want the results to be stored. This can typically be found in files like query.py or other related modules.
+
 Acknowledgments
 * Some of the code snippets, such as the prompt templates, were taken from the following GitHub repository:
-    * Original source: Multi-Agent Coding Framework using LangGraph
+    * Original source: Multi-Agent Coding Framework using LangGraph: https://github.com/anurag899/openAI-project/tree/main
 * Special thanks to the creators of the original repository for providing a basis for the prompt template implementation used in this project.
