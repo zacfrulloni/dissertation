@@ -1,33 +1,30 @@
 Dissertation Project
+
 Welcome to the Dissertation Project repository. This project is designed to facilitate data collection by generating Python scripts based on user queries, which interact with various APIs such as Google Maps, OpenAI, and LangChain.
-Table of Contents
-* Introduction
-* Features
-* Installation
-* Usage
-* API Keys Setup
-* Configuring Postman API Key and Forked UID
-* Updating File Paths
-* Acknowledgments
-Introduction
+
 This project simplifies data collection by generating and executing Python scripts based on user input. Users can interact with the application via a web interface, input queries, and receive relevant Python scripts that can interact with APIs like Google Maps.
+
 Features
+
 * Generate Python scripts based on user queries.
 * Directly execute generated scripts from the web interface.
 * Retry mechanism for script execution if initial attempts fail.
 * Real-time log updates and status messages.
 * Download the execution results in a text file.
 Installation
-1. Clone the repository: bashCopy code  git clone https://github.com/zacfrulloni/dissertation.git
-2. cd dissertation
+
+Clone the repository: git clone https://github.com/zacfrulloni/dissertation.git
+   
+cd dissertation
      
-4. Install the required Python packages: Make sure you have Python installed. Run the following command to install the required packages: bashCopy code  pip install -r requirements.txt
+Install the required Python packages: Make sure you have Python installed. Run the following command to install the required packages: pip install -r requirements.txt
+
+Run the application: Start the FastAPI server: uvicorn app.main:app --reload
      
-6. Run the application: Start the FastAPI server:
-    uvicorn app.main:app --reload
-     
-9. Access the application: Open your web browser and go to http://127.0.0.1:8000 to access the web interface.
+Access the application: Open your web browser and go to http://127.0.0.1:8000 to access the web interface.
+
 Usage
+
 * Enter your query and select a model from the dropdown menu.
 * Click on the Submit Query button to generate the Python code.
 * View the generated code and edit it if necessary.
