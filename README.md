@@ -63,6 +63,17 @@ results_file_path = '/path/to/your/results.txt'
     
 Update the paths: Replace these paths with paths specific to your environment where you want the results to be stored. This can typically be found in files like query.py or other related modules.
 
+Guides For obtaining API keys:
+
+1. Langchain: https://docs.smith.langchain.com/how_to_guides/setup/create_account_api_key#:~:text=Currently%2C%20an%20API%20key%20is,Then%20click%20Create%20API%20Key.
+
+2. OpenAI: https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key
+
+3. Google Maps: https://developers.google.com/maps/documentation/javascript/get-api-key
+
+4. https://learning.postman.com/docs/developer/postman-api/authentication/
+
+
 Acknowledgments
 * Some of the code snippets, such as the prompt templates, were taken from the following GitHub repository:
     * Original source: Multi-Agent Coding Framework using LangGraph: https://github.com/anurag899/openAI-project/tree/main
